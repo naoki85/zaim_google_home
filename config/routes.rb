@@ -5,6 +5,6 @@ Rails.application.routes.draw do
   get 'complete' => 'authenticate#complete'
 
   namespace :api, format: 'json' do
-    get 'index' => 'zaim_api#index'
+    post 'index' => 'zaim_api#index'
   end
 end
