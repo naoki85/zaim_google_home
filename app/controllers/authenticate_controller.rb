@@ -1,5 +1,9 @@
 class AuthenticateController < ApplicationController
-  CALLBACK_URL = 'http://localhost:3000/callback'.freeze
+  CALLBACK_URL = if Rails.env.production?
+                   'https://zaim-google-home.herokuapp.com/callback'.freeze
+                 else
+                   'http://localhost:3000/callback'.freeze
+                 end
   def index
   end
 
