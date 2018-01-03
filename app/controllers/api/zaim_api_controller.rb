@@ -1,12 +1,12 @@
 class Api::ZaimApiController < ApiApplicationController
   def index
     logger.info params
-    logger.info params[:parameters]
-    logger.info params[:parameters][:uid]
+    logger.info params[:result]
+    logger.info params[:result][:parameters][:uid]
     if invalid_params?
       @message = 'ログインに失敗しました'
     else
-      user = User.find_by(uid: params[:uid].downcase, password: params[:password])
+      user = User.find_by(uid: params[:result][:parameters][:uid].downcase, password: params[:result][:parameters][:password])
       if user
         access_token = MyOauth.new.set_access_token(user.access_token, user.access_token_secret)
         zaim_api = ZaimApi.new(access_token)
@@ -26,6 +26,7 @@ class Api::ZaimApiController < ApiApplicationController
   private
 
   def invalid_params?
-    !params[:uid] || !params[:password]
+    !params[:result] || !params[:result][:parameters] ||
+        !params[:result][:parameters][:uid] || !params[:result][:parameters][:password]
   end
 end
