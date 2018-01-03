@@ -9,11 +9,15 @@ class Api::ZaimApiController < ApiApplicationController
         zaim_api = ZaimApi.new(access_token)
         options = { start_date: Date.yesterday.strftime('%Y-%m-%d'), end_date: Date.today.strftime('%Y-%m-%d') }
         results = zaim_api.home_money(options)
-        sum = 0
-        results['money'].each do |money|
-          sum += money['amount'].to_i
+        if results.key?('money')
+          sum = 0
+          results['money'].each do |money|
+            sum += money['amount'].to_i
+          end
+          @message = "昨日は#{sum}円使いました"
+        else
+          @message = '結果が取得できませんでした'
         end
-        @message = "昨日は#{sum}円使いました"
       else
         @message = 'ユーザーが見つかりませんでした'
       end

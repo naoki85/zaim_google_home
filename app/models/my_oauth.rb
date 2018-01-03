@@ -2,8 +2,8 @@ require 'json'
 require 'oauth'
 
 class MyOauth
-  CONSUMER_KEY     = '50b7b2fdf0e288825064defa3a4fdd0592a6c153'
-  CONSUMER_SECRET  = '12e8c2ffef89fd4fc13d7717edf02de378a09f93'
+  CONSUMER_KEY     = ENV['CONSUMER_KEY']
+  CONSUMER_SECRET  = ENV['CONSUMER_SECRET']
 
   attr_accessor :consumer, :request_token
 

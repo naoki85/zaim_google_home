@@ -4,11 +4,11 @@
       ul
         - @user.errors.full_messages.each do |msg|
           li = msg
+  .form-group
+    = f.label :uid, 'ユーザーID（「ひらがな」のみ）', class: 'required'
+    = f.text_field :uid, required: true, class: 'form-control'
+  .form-group
+    = f.label :password, 'パスワード（「半角数字」のみ）', class: 'required'
+    = f.text_field :password, required: true, class: 'form-control'
   div
-    = f.label :uid, 'ID', class: 'required'
-    = f.text_field :uid, required: true
-  div
-    = f.label :password, 'パスワード', class: 'required'
-    = f.text_field :password, required: true
-  div
-    = f.submit '登録'
+    = f.submit '登録', class: 'btn btn-success'
