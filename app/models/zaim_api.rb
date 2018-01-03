@@ -3,10 +3,40 @@ require 'oauth'
 
 class ZaimApi
   API_BASE_URL = 'https://api.zaim.net/v2'.freeze
+  CONSUMER_KEY = ENV['CONSUMER_KEY']
+  CONSUMER_SECRET = ENV['CONSUMER_SECRET']
 
-  # @param [Object] oauth_access_token OAuth::AccessToken
-  def initialize(oauth_access_token)
-    @oauth_by_access_token = oauth_access_token
+  attr_accessor :consumer, :request_token, :access_token
+
+  def initialize
+    self.consumer = OAuth::Consumer.new(
+        CONSUMER_KEY,
+        CONSUMER_SECRET,
+        site: 'https://api.zaim.net',
+        request_token_path: '/v2/auth/request',
+        authorize_url: 'https://auth.zaim.net/users/auth',
+        access_token_path: '/v2/auth/access'
+    )
+  end
+
+  # @param [String] request_token
+  # @param [String] request_secret
+  def set_request_token(request_token, request_secret)
+    self.request_token = OAuth::RequestToken.new(
+        self.consumer,
+        request_token,
+        request_secret
+    )
+  end
+
+  # @param [String] access_token
+  # @param [String] access_token_secret
+  def set_access_token(access_token, access_token_secret)
+    self.access_token = OAuth::AccessToken.new(
+        self.consumer,
+        access_token,
+        access_token_secret
+    )
   end
 
   # GET /home/money
@@ -14,14 +44,14 @@ class ZaimApi
   # @param  [Hash]
   # @return [JSON]
   def home_money(params)
-    money = @oauth_by_access_token.get("#{API_BASE_URL}/home/money#{get_parameters_home_money(params)}")
+    money = self.access_token.get("#{API_BASE_URL}/home/money#{get_parameters_home_money(params)}")
     JSON.parse(money.body)
   end
 
   # GET /Category
   # @return [JSON]
   def category
-    categories = @oauth_by_access_token.get("#{API_BASE_URL}/category")
+    categories = self.access_token.get("#{API_BASE_URL}/category")
     JSON.parse(categories.body)
   end
 

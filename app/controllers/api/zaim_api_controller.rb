@@ -5,8 +5,8 @@ class Api::ZaimApiController < ApiApplicationController
     else
       user = User.find_by(uid: params[:result][:parameters][:uid], password: params[:result][:parameters][:password])
       if user
-        access_token = MyOauth.new.set_access_token(user.access_token, user.access_token_secret)
-        zaim_api = ZaimApi.new(access_token)
+        zaim_api = ZaimApi.new
+        zaim_api.set_access_token(user.access_token, user.access_token_secret)
         options = { start_date: Date.yesterday.strftime('%Y-%m-%d'), end_date: Date.today.strftime('%Y-%m-%d') }
         results = zaim_api.home_money(options)
         if results.key?('money')

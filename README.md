@@ -2,7 +2,7 @@
 
 ## Prepare
 1 Clone this repository  
-2 [Install Docker](https://docs.docker.com/engine/installation/)
+2 [Install Docker](https://docs.docker.com/engine/installation/)  
 3 Create .env file  
 
 ```
@@ -36,7 +36,7 @@ After authenticate `POST /api/index.json` with below params will return response
 {
   result: {
     parameters: {
-      uid: 'test',
+      uid: 'てすと',
       password: '1111'
     }
   }
