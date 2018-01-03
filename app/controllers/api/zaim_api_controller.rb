@@ -1,5 +1,8 @@
 class Api::ZaimApiController < ApiApplicationController
   def index
+    logger.info params
+    logger.info params[:parameters]
+    logger.info params[:parameters][:uid]
     if invalid_params?
       @message = 'ログインに失敗しました'
     else
