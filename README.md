@@ -1,24 +1,47 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Prepare
+1 Clone this repository  
+2 [Install Docker](https://docs.docker.com/engine/installation/)  
+3 Start docker
 
-Things you may want to cover:
+```
+$ docker-compose build
+$ docker-compose up -d
+```
+4 Setup Database
 
-* Ruby version
+```
+$ docker-compose run ruby rake db:create
+$ docker-compose run ruby rake db:migrate
+```
+5 Access  
+[http://localhost:3000](http://localhost:3000)
 
-* System dependencies
+## Check API Response
+After authenticate `POST /api/index.json` with below params will return response.
 
-* Configuration
+```
+# Require Params
+{
+  result: {
+    parameters: {
+      uid: 'test',
+      password: '1111'
+    }
+  }
+}
+```
 
-* Database creation
+```
+# Return Example
+{
+  'speech':'昨日は100円使いました',
+  'displayText':'昨日は100円使いました',
+}
+```
+## Stop Docker
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```
+$ docker-compose stop
+```
