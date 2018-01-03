@@ -9,6 +9,7 @@ class Api::ZaimApiController < ApiApplicationController
         zaim_api.set_access_token(user.access_token, user.access_token_secret)
         options = { start_date: Date.yesterday.strftime('%Y-%m-%d'), end_date: Date.today.strftime('%Y-%m-%d') }
         results = zaim_api.home_money(options)
+
         if results.key?('money')
           sum = 0
           results['money'].each do |money|
