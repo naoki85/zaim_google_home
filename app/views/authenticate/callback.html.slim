@@ -1,0 +1,14 @@
+= form_for @user, url: complete_path, role: 'form' do |f|
+  - if @user.errors.any?
+    .alert.alert-danger
+      ul
+        - @user.errors.full_messages.each do |msg|
+          li = msg
+  div
+    = f.label :uid, 'ID', class: 'required'
+    = f.text_field :uid, required: true
+  div
+    = f.label :encrypt_password, 'パスワード', class: 'required'
+    = f.text_field :encrypt_password, required: true
+  div
+    = f.submit '登録'

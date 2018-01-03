@@ -19,25 +19,39 @@ class AuthenticateController < ApplicationController
     if session[:request_token] && params[:oauth_verifier]
       my_oauth = MyOauth.new
       my_oauth.set_request_token(session[:request_token], session[:request_secret])
-      p my_oauth
 
       oauth_verifier = params[:oauth_verifier]
       access_token = my_oauth.request_token.get_access_token(:oauth_verifier => oauth_verifier)
-      p access_token
       session[:access_token] = access_token.token
       session[:access_secret] = access_token.secret
 
-      user = User.new
-      user.encrypt_zaim_request_token = session[:request_token]
-      user.encrypt_zaim_request_token_secret = session[:request_secret]
-      user.encrypt_zaim_access_token = session[:access_token]
-      user.encrypt_zaim_access_token_secret = session[:access_secret]
-      user.save
+      @user = User.new
+      @user.encrypt_zaim_request_token = session[:request_token]
+      @user.encrypt_zaim_request_token_secret = session[:request_secret]
+      @user.encrypt_zaim_access_token = session[:access_token]
+      @user.encrypt_zaim_access_token_secret = session[:access_secret]
+      @user.save!
+    else
+      redirect_to root_path, alert: '不正な画面遷移です'
     end
-    redirect_to complete_path
   end
 
   def complete
+    redirect_to root_path, alert: '不正な画面遷移です' if invalid_session?
+    user = User.find_by!(encrypt_zaim_request_token: session[:request_token],
+                        encrypt_zaim_request_token_secret: session[:request_secret],
+                        encrypt_zaim_access_token: session[:access_token],
+                        encrypt_zaim_access_token_secret: session[:access_secret])
+    user.update(user_params)
+  end
 
+  private
+
+  def user_params
+    params.require(:user).permit(:uid, :encrypt_password)
+  end
+
+  def invalid_session?
+    !session[:request_token] || !session[:request_secret] || !session[:access_token] || !session[:access_secret]
   end
 end
