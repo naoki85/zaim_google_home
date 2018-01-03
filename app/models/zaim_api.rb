@@ -48,13 +48,6 @@ class ZaimApi
     JSON.parse(money.body)
   end
 
-  # GET /Category
-  # @return [JSON]
-  def category
-    categories = self.access_token.get("#{API_BASE_URL}/category")
-    JSON.parse(categories.body)
-  end
-
   private
 
   # GET parameters for API /home/money

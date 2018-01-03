@@ -23,12 +23,13 @@ class AuthenticateController < ApplicationController
       session[:access_token] = access_token.token
       session[:access_secret] = access_token.secret
 
-      @user = User.new
-      @user.request_token = session[:request_token]
-      @user.request_token_secret = session[:request_secret]
-      @user.access_token = session[:access_token]
-      @user.access_token_secret = session[:access_secret]
+      @user = User.new(request_token: session[:request_token],
+                       request_token_secret: session[:request_secret],
+                       access_token: session[:access_token],
+                       access_token_secret: session[:access_secret])
       @user.save!
+    elsif session[:request_token] && session[:request_secret] && session[:access_token] && session[:access_secret]
+      set_user_by_session_params
     else
       reset_session
       redirect_to root_path, alert: '不正な画面遷移です'
@@ -37,10 +38,7 @@ class AuthenticateController < ApplicationController
 
   def complete
     redirect_to root_path, alert: '不正な画面遷移です' if invalid_session?
-    @user = User.find_by!(request_token: session[:request_token],
-                          request_token_secret: session[:request_secret],
-                          access_token: session[:access_token],
-                          access_token_secret: session[:access_secret])
+    set_user_by_session_params
     if @user.update(user_params)
       reset_session
       render :complete
@@ -57,5 +55,12 @@ class AuthenticateController < ApplicationController
 
   def invalid_session?
     !session[:request_token] || !session[:request_secret] || !session[:access_token] || !session[:access_secret]
+  end
+
+  def set_user_by_session_params
+    @user = User.find_by!(request_token: session[:request_token],
+                          request_token_secret: session[:request_secret],
+                          access_token: session[:access_token],
+                          access_token_secret: session[:access_secret])
   end
 end
