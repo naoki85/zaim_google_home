@@ -1,7 +1,7 @@
 class Api::ZaimApiController < ApiApplicationController
   def index
     user = User.last
-    access_token = MyOauth.new.set_access_token(user.encrypt_zaim_access_token, user.encrypt_zaim_access_token_secret)
+    access_token = MyOauth.new.set_access_token(user.access_token, user.access_token_secret)
     zaim_api = ZaimApi.new(access_token)
     options = { start_date: Date.yesterday.strftime('%Y-%m-%d'), end_date: Date.today.strftime('%Y-%m-%d') }
     results = zaim_api.home_money(options)

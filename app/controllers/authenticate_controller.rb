@@ -26,10 +26,10 @@ class AuthenticateController < ApplicationController
       session[:access_secret] = access_token.secret
 
       @user = User.new
-      @user.encrypt_zaim_request_token = session[:request_token]
-      @user.encrypt_zaim_request_token_secret = session[:request_secret]
-      @user.encrypt_zaim_access_token = session[:access_token]
-      @user.encrypt_zaim_access_token_secret = session[:access_secret]
+      @user.request_token = session[:request_token]
+      @user.request_token_secret = session[:request_secret]
+      @user.access_token = session[:access_token]
+      @user.access_token_secret = session[:access_secret]
       @user.save!
     else
       redirect_to root_path, alert: '不正な画面遷移です'
@@ -38,17 +38,22 @@ class AuthenticateController < ApplicationController
 
   def complete
     redirect_to root_path, alert: '不正な画面遷移です' if invalid_session?
-    user = User.find_by!(encrypt_zaim_request_token: session[:request_token],
-                        encrypt_zaim_request_token_secret: session[:request_secret],
-                        encrypt_zaim_access_token: session[:access_token],
-                        encrypt_zaim_access_token_secret: session[:access_secret])
-    user.update(user_params)
+    @user = User.find_by!(request_token: session[:request_token],
+                          request_token_secret: session[:request_secret],
+                          access_token: session[:access_token],
+                          access_token_secret: session[:access_secret])
+    if @user.update(user_params)
+      reset_session
+      render :complete
+    else
+      render :callback
+    end
   end
 
   private
 
   def user_params
-    params.require(:user).permit(:uid, :encrypt_password)
+    params.require(:user).permit(:uid, :password)
   end
 
   def invalid_session?

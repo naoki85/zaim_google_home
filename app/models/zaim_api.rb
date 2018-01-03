@@ -25,20 +25,6 @@ class ZaimApi
     JSON.parse(categories.body)
   end
 
-  def refresh()
-    oauth_verifier = params[:oauth_verifier]
-    access_token = my_oauth.request_token.get_access_token(:oauth_verifier => oauth_verifier)
-    session[:access_token] = access_token.token
-    session[:access_secret] = access_token.secret
-
-    user = User.new
-    user.encrypt_zaim_request_token = session[:request_token]
-    user.encrypt_zaim_request_token_secret = session[:request_secret]
-    user.encrypt_zaim_access_token = session[:access_token]
-    user.encrypt_zaim_access_token_secret = session[:access_secret]
-    user.save
-  end
-
   private
 
   # GET parameters for API /home/money

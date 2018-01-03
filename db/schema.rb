@@ -35,11 +35,11 @@ ActiveRecord::Schema.define(version: 2017_12_31_161347) do
 
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "uid"
-    t.string "encrypt_password"
-    t.string "encrypt_zaim_request_token"
-    t.string "encrypt_zaim_request_token_secret"
-    t.string "encrypt_zaim_access_token"
-    t.string "encrypt_zaim_access_token_secret"
+    t.string "password"
+    t.string "request_token"
+    t.string "request_token_secret"
+    t.string "access_token"
+    t.string "access_token_secret"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["uid"], name: "index_users_on_uid", unique: true
