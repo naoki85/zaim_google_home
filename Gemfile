@@ -49,6 +49,9 @@ group :development, :test do
   gem 'chromedriver-helper'
   # Use mysql as the database for Active Record
   gem 'mysql2', '>= 0.3.18', '< 0.5'
+  gem 'rspec-rails', '~> 3.7'
+  gem 'shoulda-matchers', require: false
+  gem 'factory_bot_rails'
 end
 
 group :development do
